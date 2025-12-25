@@ -6,6 +6,8 @@ import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 
 import { connectDB } from './config/database';
+import { initAgenda } from './services/scheduler.service';
+import { initTelegramBot } from './services/telegram.service';
 import authRoutes from './routes/auth.routes';
 import platformRoutes from './routes/platform.routes';
 import scheduleRoutes from './routes/schedule.routes';
@@ -76,6 +78,12 @@ const startServer = async () => {
   try {
     // Connect to MongoDB
     await connectDB();
+
+    // Initialize Agenda scheduler
+    await initAgenda();
+
+    // Initialize Telegram bot
+    initTelegramBot();
 
     httpServer.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
